@@ -1,5 +1,6 @@
 import multiprocessing
 import os
+import time
 
 import numpy as np
 import pandas as pd
@@ -23,14 +24,16 @@ def main():
     filepath = "static/arxiv-metadata-oai-snapshot_hepthph.json"
     df = pd.read_json(filepath)
 
-    ncores = multiprocessing.cpu_count() - 1
+    ncores = 1
     df_splits = np.array_split(df, ncores)
-    with multiprocessing.Pool(processes=ncores) as pool:
+    with multiprocessing.Pool(ncores) as pool:
         embeddings = pool.map(encode, df_splits)
 
     filename, _ = os.path.splitext(filepath)
-    np.save(filename + "_emb", embeddings)
+    np.save(filename + "_emb", np.concatenate(embeddings))
 
 
 if __name__ == "__main__":
+    t0 = time.perf_counter()
     main()
+    print("Time in minutes: ", (time.perf_counter() - t0) / 60)
