@@ -8,7 +8,11 @@ import pandas as pd
 def arxiv_filter(
     directory: str, yr_range: Tuple[float, float], categories: List[str] = None
 ) -> pd.DataFrame:
-    files = Path(directory).glob("chunk*.json")  # Files have to be named chunk*.json
+    """Filters an arXiv database from a directory, based on the year of last update
+    and categories.
+    Files should be divided into chunks named in the format "chunk*.json".
+    """
+    files = Path(directory).glob("chunk*.json")
 
     frames = []
     for file in files:
