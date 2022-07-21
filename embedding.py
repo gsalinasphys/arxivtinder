@@ -1,4 +1,3 @@
-import multiprocessing
 import os
 import time
 
@@ -12,7 +11,7 @@ def encode(
 ) -> None:  # Also try 'allenai-specter', but very slow
     """Encodes the abstracts from papers in a dataframe using a
     sentence-transformers model."""
-    abstracts = list(df["abstract"])
+    abstracts = df["abstract"].values
 
     model = SentenceTransformer("sentence-transformers/" + model)
     embeddings = model.encode(abstracts)
@@ -21,13 +20,10 @@ def encode(
 
 
 def main():
-    filepath = "static/arxiv-metadata-oai-snapshot_hepthph.json"
+    filepath = "static/arxiv-metadata-oai-snapshot_from17.json"
     df = pd.read_json(filepath)
 
-    ncores = 1
-    df_splits = np.array_split(df, ncores)
-    with multiprocessing.Pool(ncores) as pool:
-        embeddings = pool.map(encode, df_splits)
+    embeddings = encode(df)
 
     filename, _ = os.path.splitext(filepath)
     np.save(filename + "_emb", np.concatenate(embeddings))
