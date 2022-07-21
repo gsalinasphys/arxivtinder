@@ -26,7 +26,7 @@ def main():
     embeddings = encode(df)
 
     filename, _ = os.path.splitext(filepath)
-    np.save(filename + "_emb", np.concatenate(embeddings))
+    np.save(filename + "_emb", embeddings)
 
 
 if __name__ == "__main__":
