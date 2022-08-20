@@ -24,6 +24,10 @@ filelock==3.7.1
     # via virtualenv
 flake8==4.0.1
     # via -r requirements/test_requirements.in
+greenlet==1.1.2
+    # via
+    #   -r requirements/requirements.txt
+    #   sqlalchemy
 identify==2.5.1
     # via pre-commit
 ipython==8.4.0
@@ -87,6 +91,8 @@ six==1.16.0
     #   -r requirements/requirements.txt
     #   python-dateutil
     #   virtualenv
+sqlalchemy==1.4.40
+    # via -r requirements/requirements.txt
 stack-data==0.3.0
     # via ipython
 toml==0.10.2

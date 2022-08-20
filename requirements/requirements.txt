@@ -4,6 +4,8 @@
 #
 #    pip-compile requirements/requirements.in
 #
+greenlet==1.1.2
+    # via sqlalchemy
 numpy==1.23.0
     # via
     #   -r requirements/requirements.in
@@ -16,3 +18,5 @@ pytz==2022.1
     # via pandas
 six==1.16.0
     # via python-dateutil
+sqlalchemy==1.4.40
+    # via -r requirements/requirements.in
