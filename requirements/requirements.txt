@@ -4,8 +4,14 @@
 #
 #    pip-compile requirements/requirements.in
 #
+alembic==1.8.1
+    # via -r requirements/requirements.in
 greenlet==1.1.2
     # via sqlalchemy
+mako==1.2.1
+    # via alembic
+markupsafe==2.1.1
+    # via mako
 numpy==1.23.0
     # via
     #   -r requirements/requirements.in
@@ -19,4 +25,6 @@ pytz==2022.1
 six==1.16.0
     # via python-dateutil
 sqlalchemy==1.4.40
-    # via -r requirements/requirements.in
+    # via
+    #   -r requirements/requirements.in
+    #   alembic
