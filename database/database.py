@@ -1,3 +1,5 @@
 from sqlalchemy import create_engine
 
-engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
+DATABASE_URI = "sqlite+pysqlite:///:memory:"
+
+engine = create_engine(DATABASE_URI, echo=True, future=True)
