@@ -8,9 +8,9 @@ import tqdm
 def filter_arxiv_file(
     input_filename: str,
     output_filename: str,
-    categories: List[str],
-    start_year: int,
-    end_year: int,
+    categories: List[str] = None,
+    start_year: int = None,
+    end_year: int = None,
 ):
     """Filters an arXiv database from a directory, based on the year of last update
     and categories.
@@ -31,6 +31,8 @@ def filter_arxiv_file(
 def _filter_categories(chunk: pd.DataFrame, categories: List[str]):
     if len(chunk) == 0:
         return chunk
+    if categories is None:
+        return chunk
     category_filter = pd.Series(data=len(chunk) * [False], index=chunk.index)
     for category in categories:
         category_filter |= chunk.categories.str.contains(category)
@@ -38,6 +40,8 @@ def _filter_categories(chunk: pd.DataFrame, categories: List[str]):
 
 
 def _filter_timerange(chunk: pd.DataFrame, start_year: int, end_year: int):
+    if start_year is None and end_year is None:
+        return chunk
     return chunk[
         (chunk.update_date >= str(start_year)) & (chunk.update_date < str(end_year + 1))
     ]
