@@ -20,8 +20,8 @@ def encode(
 
 
 def main():
-    filepath = "static/arxiv-metadata-oai-snapshot_from17.json"
-    df = pd.read_json(filepath)
+    filepath = "static/arxiv-metadata-oai-snapshot_hepthph.json"
+    df = pd.read_json(filepath, lines=True)
 
     embeddings = encode(df)
 
