@@ -2,3 +2,5 @@ numpy
 pandas
 SQLAlchemy
 alembic
+tqdm
+sentence-transformers
