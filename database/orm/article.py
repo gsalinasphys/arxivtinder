@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Date, ForeignKey, String
-from sqlalchemy.dialects.mysql import MEDIUMBLOB, MEDIUMTEXT
-from sqlalchemy.orm import relationship
+from sqlalchemy import BLOB, Column, Date, ForeignKey, String
+from sqlalchemy.orm import deferred, relationship
 
 from .base import Base
 
@@ -14,8 +13,8 @@ class CategoryTagArticle(Base):
 class Article(Base):
     __tablename__ = "articles"
     id = Column(String, primary_key=True)
-    abstract = Column(MEDIUMTEXT(unicode=True))
-    abstract_embedding = Column(MEDIUMBLOB)
+    abstract = Column(String)
+    abstract_embedding = deferred(Column(BLOB(2**24 - 1)))
     title = Column(String)
     submitter = Column(String)
     journal_ref = Column(String)
