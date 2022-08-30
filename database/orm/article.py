@@ -37,5 +37,5 @@ class CategoryTag(Base):
     articles = relationship(
         "Article",
         secondary=CategoryTagArticle.__tablename__,
-        back_populates="category_tags",
+        back_populates="tags",
     )
