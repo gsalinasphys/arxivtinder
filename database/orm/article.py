@@ -13,14 +13,14 @@ class CategoryTagArticle(Base):
 class Article(Base):
     __tablename__ = "articles"
     id = Column(String, primary_key=True)
-    abstract = Column(String)
+    abstract = Column(String, nullable=False)
     abstract_embedding = deferred(Column(BLOB(2**24 - 1)))
-    title = Column(String)
+    title = Column(String, nullable=False)
     submitter = Column(String)
     journal_ref = Column(String)
     doi = Column(String)
     authors = Column(String)
-    updated_at = Column(Date)
+    updated_at = Column(Date, nullable=False)
 
     tags = relationship(
         "CategoryTag",
@@ -32,7 +32,7 @@ class Article(Base):
 class CategoryTag(Base):
     __tablename__ = "category_tags"
     tag = Column(String, primary_key=True)
-    name = Column(String)
+    name = Column(String, nullable=False)
 
     articles = relationship(
         "Article",
