@@ -1,15 +1,15 @@
-"""Relationships
+"""Initial models
 
-Revision ID: ea147039dca6
+Revision ID: 5b3599c20f63
 Revises:
-Create Date: 2022-08-30 14:02:58.500577
+Create Date: 2022-08-30 17:38:56.262475
 
 """
 import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "ea147039dca6"
+revision = "5b3599c20f63"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -20,26 +20,26 @@ def upgrade() -> None:
     op.create_table(
         "articles",
         sa.Column("id", sa.String(), nullable=False),
-        sa.Column("abstract", sa.String(), nullable=True),
+        sa.Column("abstract", sa.String(), nullable=False),
         sa.Column("abstract_embedding", sa.BLOB(length=16777215), nullable=True),
-        sa.Column("title", sa.String(), nullable=True),
+        sa.Column("title", sa.String(), nullable=False),
         sa.Column("submitter", sa.String(), nullable=True),
         sa.Column("journal_ref", sa.String(), nullable=True),
         sa.Column("doi", sa.String(), nullable=True),
         sa.Column("authors", sa.String(), nullable=True),
-        sa.Column("updated_at", sa.Date(), nullable=True),
+        sa.Column("updated_at", sa.Date(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
         "category_tags",
         sa.Column("tag", sa.String(), nullable=False),
-        sa.Column("name", sa.String(), nullable=True),
+        sa.Column("name", sa.String(), nullable=False),
         sa.PrimaryKeyConstraint("tag"),
     )
     op.create_table(
         "user",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("full_name", sa.String(), nullable=True),
+        sa.Column("full_name", sa.String(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -62,7 +62,9 @@ def upgrade() -> None:
         sa.Column("article_id", sa.String(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
         sa.Column(
-            "sentiment", sa.Enum("like", "dislike", name="usersentiment"), nullable=True
+            "sentiment",
+            sa.Enum("like", "dislike", name="usersentiment"),
+            nullable=False,
         ),
         sa.ForeignKeyConstraint(
             ["article_id"],
