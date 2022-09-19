@@ -1,3 +1,4 @@
+import argparse
 import os
 import time
 
@@ -21,14 +22,18 @@ def get_df_from_json(filepath: str) -> pd.DataFrame:
 
 
 def main():
-    filepath = "static/arxiv-small.json"
-    df = get_df_from_json(filepath)
+    # filepath = "static/arxiv-small.json"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("filepath")
+    args = parser.parse_args()
+
+    df = get_df_from_json(args.filepath)
 
     title_embeddings = encode(df.title.values)
     abstract_embeddings = encode(df.abstract.values)
     category_ohe = df.categories.str.get_dummies(sep=" ").values
 
-    filename, _ = os.path.splitext(filepath)
+    filename, _ = os.path.splitext(args.filepath)
     np.save(filename + "_title_emb", title_embeddings)
     np.save(filename + "_abs_emb", abstract_embeddings)
     np.save(filename + "_cat_ohe", category_ohe)
