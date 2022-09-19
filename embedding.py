@@ -6,27 +6,34 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer
 
 
-def encode(
-    df: pd.DataFrame, model: str = "all-MiniLM-L6-v2"
-) -> None:  # Also try 'allenai-specter', but very slow
-    """Encodes the abstracts from papers in a dataframe using a
+def encode(sentences: np.ndarray, model: str = "all-MiniLM-L6-v2") -> None:
+    """Generates the embeddings of sentences using a
     sentence-transformers model."""
-    abstracts = df["abstract"].values
 
     model = SentenceTransformer("sentence-transformers/" + model)
-    embeddings = model.encode(abstracts)
+    embeddings = model.encode(sentences)
 
     return embeddings
 
 
-def main():
-    filepath = "static/arxiv-metadata-oai-snapshot_hepthph.json"
-    df = pd.read_json(filepath, lines=True)
+def get_df_from_json(filepath: str) -> pd.DataFrame:
+    return pd.read_json(filepath, lines=True)
 
-    embeddings = encode(df)
+
+def main():
+    filepath = "static/arxiv-small.json"
+    df = get_df_from_json(filepath)
+
+    title_embeddings = encode(df.title.values)
+    abstract_embeddings = encode(df.abstract.values)
+    category_ohe = df.categories.str.get_dummies(sep=" ").values
 
     filename, _ = os.path.splitext(filepath)
-    np.save(filename + "_emb", embeddings)
+    np.save(filename + "_title_emb", title_embeddings)
+    np.save(filename + "_abs_emb", abstract_embeddings)
+    np.save(filename + "_cat_ohe", category_ohe)
+
+    np.save(filename + "_ids", df.id.values)
 
 
 if __name__ == "__main__":
