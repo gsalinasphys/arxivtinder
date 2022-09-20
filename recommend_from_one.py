@@ -1,10 +1,6 @@
 import numpy as np
 
-from top_hits import cosine_similarity, top_hits
-
-
-def find_row_number(id: str) -> np.ndarray:
-    pass
+from top_hits import top_hits
 
 
 def recommend_from_one(
@@ -26,15 +22,15 @@ def recommend_from_one(
                         Larger values look further from the top hits.
 
     """
-    tophits = top_hits(title_embeddings, abs_embeddings, cat_ohe, row, n_reach)
-    index = np.random.choice(
-        tophits[0],
-        replace=False,
-        p=tophits[1] ** (100 / temperature) / sum(tophits[1] ** (100 / temperature)),
+    indices, cos_sims = top_hits(
+        title_embeddings, abs_embeddings, cat_ohe, row, n_reach
     )
-    return index, cosine_similarity(
-        title_embeddings[row], title_embeddings[index]
-    ) + cosine_similarity(abs_embeddings[row], abs_embeddings[index])
+    index = np.random.choice(
+        indices,
+        replace=False,
+        p=cos_sims ** (100 / temperature) / sum(cos_sims ** (100 / temperature)),
+    )
+    return index, cos_sims[index]
 
 
 if __name__ == "__main__":
