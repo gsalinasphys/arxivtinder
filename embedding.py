@@ -33,6 +33,11 @@ def get_df_from_json(filepath: str) -> pd.DataFrame:
     return pd.read_json(filepath, lines=True)
 
 
+def normalize_vecs(vs: np.ndarray) -> np.ndarray:
+    norms = np.linalg.norm(vs, axis=1)
+    return np.divide(vs.T, norms).T
+
+
 def encode_df(df: pd.DataFrame) -> None:
     """Generates the embeddings of titles, abstract and one-hot encodes
     categories from arXiv data."""
@@ -43,7 +48,7 @@ def encode_df(df: pd.DataFrame) -> None:
     filename, _ = os.path.splitext(args.filepath)
     np.save(filename + "_title_emb", title_embeddings)
     np.save(filename + "_abs_emb", abstract_embeddings)
-    np.save(filename + "_cat_ohe", category_ohe)
+    np.save(filename + "_cat_ohe", normalize_vecs(category_ohe))
 
     np.save(filename + "_ids", df.id.values)
 
