@@ -50,7 +50,7 @@ def encode_df(df: pd.DataFrame) -> None:
     np.save(filename + "_abs_emb", abstract_embeddings)
     np.save(filename + "_cat_ohe", normalize_vecs(category_ohe))
 
-    np.save(filename + "_ids", df.id.values)
+    np.save(filename + "_ids", df.id.values.astype("str"))
 
 
 if __name__ == "__main__":
