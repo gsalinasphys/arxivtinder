@@ -40,13 +40,8 @@ def _filter_categories(chunk: pd.DataFrame, categories: List[str]):
 
 
 def _filter_timerange(chunk: pd.DataFrame, start_year: int, end_year: int):
-    if start_year is None and end_year is None:
-        return chunk
-    elif start_year is None:
-        return chunk[chunk.update_date < str(end_year + 1)]
-    elif end_year is None:
-        return chunk[chunk.update_date >= str(start_year)]
-
-    return chunk[
-        (chunk.update_date >= str(start_year)) & (chunk.update_date < str(end_year + 1))
-    ]
+    if start_year is not None:
+        chunk = chunk[chunk.update_date >= str(start_year)]
+    if end_year is not None:
+        chunk = chunk[chunk.update_date < str(end_year + 1)]
+    return chunk
