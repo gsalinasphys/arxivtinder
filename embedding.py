@@ -9,14 +9,21 @@ from sentence_transformers import SentenceTransformer
 
 
 @cache
-def get_model(model_name: str = "all-MiniLM-L6-v2"):
+def get_model(model_name: str):
     return SentenceTransformer("sentence-transformers/" + model_name)
 
 
-def encode(sentences: np.ndarray, model_name: str = "all-MiniLM-L6-v2") -> np.ndarray:
+def get_title_embedding_model():
+    return get_model("all-MiniLM-L6-v2")
+
+
+def get_abstract_embedding_model():
+    return get_model("all-MiniLM-L6-v2")
+
+
+def encode(sentences: np.ndarray, model) -> np.ndarray:
     """Generates the embeddings of sentences using a
     sentence-transformers model."""
-    model = get_model(model_name)
     embeddings = model.encode(sentences)
 
     return embeddings
@@ -29,8 +36,8 @@ def get_df_from_json(filepath: str) -> pd.DataFrame:
 def encode_df(df: pd.DataFrame) -> None:
     """Generates the embeddings of titles, abstract and one-hot encodes
     categories from arXiv data."""
-    title_embeddings = encode(df.title.values)
-    abstract_embeddings = encode(df.abstract.values)
+    title_embeddings = encode(df.title.values, get_title_embedding_model())
+    abstract_embeddings = encode(df.abstract.values, get_abstract_embedding_model())
     category_ohe = df.categories.str.get_dummies(sep=" ").values
 
     filename, _ = os.path.splitext(args.filepath)
