@@ -27,6 +27,8 @@ def get_df_from_json(filepath: str) -> pd.DataFrame:
 
 
 def encode_df(df: pd.DataFrame) -> None:
+    """Generates the embeddings of titles, abstract and one-hot encodes
+    categories from arXiv data."""
     title_embeddings = encode(df.title.values)
     abstract_embeddings = encode(df.abstract.values)
     category_ohe = df.categories.str.get_dummies(sep=" ").values
