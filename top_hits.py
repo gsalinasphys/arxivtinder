@@ -1,7 +1,23 @@
 import argparse
 import os
+from functools import cache
 
 import numpy as np
+
+
+@cache
+def get_title_embeddings(filename: str) -> np.ndarray:
+    return np.load(filename + "_title_emb.npy")
+
+
+@cache
+def get_abs_embeddings(filename: str) -> np.ndarray:
+    return np.load(filename + "_abs_emb.npy")
+
+
+@cache
+def get_cat_ohe(filename: str) -> np.ndarray:
+    return np.load(filename + "_cat_ohe.npy")
 
 
 def find_row_number(id: str, ids: np.ndarray) -> np.ndarray:
@@ -40,20 +56,26 @@ def top_hits(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("id")
     parser.add_argument("path_to_database")
     args = parser.parse_args()
 
     filename, _ = os.path.splitext(args.path_to_database)
     ids = np.load(filename + "_ids.npy", allow_pickle=True)
-    row = find_row_number(args.id, ids)
 
-    title_embeddings = np.load(filename + "_title_emb.npy")
-    abs_embeddings = np.load(filename + "_abs_emb.npy")
-    cat_ohe = np.load(filename + "_cat_ohe.npy")
-    indices, closeness_measures = top_hits(
-        title_embeddings, abs_embeddings, cat_ohe, row
-    )
+    title_embeddings = get_title_embeddings(filename)
+    abs_embeddings = get_abs_embeddings(filename)
+    cat_ohe = get_cat_ohe(filename)
 
-    for id, closeness_measure in list(zip(ids[indices], closeness_measures)):
-        print(f"{id}: {closeness_measure:.3f}")
+    stay = True
+    while stay:
+        id = input("Enter arXiv id (type 'exit' to leave): ")
+        if id == "exit":
+            break
+        row = find_row_number(id, ids)
+
+        indices, closeness_measures = top_hits(
+            title_embeddings, abs_embeddings, cat_ohe, row
+        )
+
+        for id, closeness_measure in list(zip(ids[indices], closeness_measures)):
+            print(f"{id}: {closeness_measure:.3f}")
