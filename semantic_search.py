@@ -22,8 +22,8 @@ def get_cat_ohe(filename: str) -> np.ndarray:
     return np.load(filename + "_cat_ohe.npy")
 
 
-def find_row_number(id: str, ids: np.ndarray) -> np.ndarray:
-    return np.where(ids == id)[0][0]
+def find_row_numbers(ids: list, arxiv_ids: np.ndarray) -> np.ndarray:
+    return [np.where(arxiv_ids == id)[0][0] for id in ids]
 
 
 def top_hits(
@@ -45,14 +45,12 @@ def top_hits(
     corpus_embeddings = torch.from_numpy(corpus_embeddings)
 
     query_embedding = np.concatenate(
-        (title_embeddings[rows], abs_embeddings[rows], cat_ohe[rows])
+        (title_embeddings[rows], abs_embeddings[rows], cat_ohe[rows]), axis=1
     )
     query_embedding = torch.from_numpy(query_embedding)
 
     search_hits = util.semantic_search(query_embedding, corpus_embeddings, top_k=n)
-    search_hits = search_hits[0]  # Get the hits for the first query
-
-    print(search_hits)
+    return [search_hit[1:] for search_hit in search_hits]
 
 
 if __name__ == "__main__":
@@ -69,9 +67,19 @@ if __name__ == "__main__":
 
     stay = True
     while stay:
-        id = input("Enter arXiv id (type 'exit' to leave): ")
-        if id == "exit":
+        ids = input(
+            "Enter arXiv ids, separated by spaces (type 'exit' to leave): "
+        ).split()
+        if ids == "exit":
             break
-        row = find_row_number(id, arxiv_ids)
+        rows = find_row_numbers(ids, arxiv_ids)
 
-        top_hits(title_embeddings, abs_embeddings, cat_ohe, row)
+        tophits = top_hits(title_embeddings, abs_embeddings, cat_ohe, rows)
+
+        for ii, id in enumerate(ids):
+            print("Paper arXiv id: ", id)
+            print("Best matches: ")
+            print("Score    arXiv id")
+
+            for hit in tophits[ii]:
+                print(f"{hit['score']:.3f}  {arxiv_ids[hit['corpus_id']]}")
