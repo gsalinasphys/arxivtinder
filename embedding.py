@@ -12,14 +12,14 @@ from sentence_transformers import SentenceTransformer
 def get_model():
     return SentenceTransformer('allenai-specter')
 
-def get_title_abs(filepath: str) -> list:
-    papers = []
+def get_id_title_abs(filepath: str) -> list:
+    ids, papers = [], []
     with open(filepath, 'r') as f:
         for line in f.readlines():
             paper = json.loads(line)
             papers.append(paper['title'] + '[SEP]' + paper['abstract'].strip())
     
-    return papers
+    return ids, papers
 
 def encode(sentences: np.ndarray, model) -> np.ndarray:
     """Generates the embeddings of sentences using a
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     filename, _ = os.path.splitext(args.filepath)
-    papers = get_title_abs(args.filepath)
+    ids, papers = get_id_title_abs(args.filepath)
     print(len(papers), "papers loaded.")
 
     model = get_model()
@@ -43,4 +43,5 @@ if __name__ == "__main__":
     embeddings = encode(papers, model)
     print('Elapsed time (minutes): ', round((time.perf_counter() - start) / 60, 1))
 
+    np.save(filename + '_ids', ids)
     np.save(filename + '_emb', embeddings)
