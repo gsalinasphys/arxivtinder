@@ -1,25 +1,25 @@
 import argparse
+import json
 import os
 import time
 from functools import cache
 
 import numpy as np
-import pandas as pd
 from sentence_transformers import SentenceTransformer
 
 
 @cache
-def get_model(model_name: str):
-    return SentenceTransformer("sentence-transformers/" + model_name)
+def get_model():
+    return SentenceTransformer('allenai-specter')
 
-
-def get_title_embedding_model():
-    return get_model("all-MiniLM-L6-v2")
-
-
-def get_abstract_embedding_model():
-    return get_model("all-MiniLM-L6-v2")
-
+def get_id_title_abs(filepath: str) -> list:
+    ids, papers = [], []
+    with open(filepath, 'r') as f:
+        for line in f.readlines():
+            paper = json.loads(line)
+            papers.append(paper['title'] + '[SEP]' + paper['abstract'].strip())
+    
+    return ids, papers
 
 def encode(sentences: np.ndarray, model) -> np.ndarray:
     """Generates the embeddings of sentences using a
@@ -28,33 +28,20 @@ def encode(sentences: np.ndarray, model) -> np.ndarray:
 
     return embeddings
 
-
-def get_df_from_json(filepath: str) -> pd.DataFrame:
-    return pd.read_json(filepath, lines=True)
-
-
-def encode_df(df: pd.DataFrame) -> None:
-    """Generates the embeddings of titles, abstract and one-hot encodes
-    categories from arXiv data."""
-    title_embeddings = encode(df.title.values, get_title_embedding_model())
-    abstract_embeddings = encode(df.abstract.values, get_abstract_embedding_model())
-    category_ohe = df.categories.str.get_dummies(sep=" ").values
-
-    filename, _ = os.path.splitext(args.filepath)
-    np.save(filename + "_title_emb", title_embeddings)
-    np.save(filename + "_abs_emb", abstract_embeddings)
-    np.save(filename + "_cat_ohe", category_ohe)
-
-    np.save(filename + "_ids", df.id.values)
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("filepath")
     args = parser.parse_args()
 
-    df = get_df_from_json(args.filepath)
+    filename, _ = os.path.splitext(args.filepath)
+    ids, papers = get_id_title_abs(args.filepath)
+    print(len(papers), "papers loaded.")
 
-    t0 = time.perf_counter()
-    encode_df(df)
-    print("Time in minutes: ", (time.perf_counter() - t0) / 60)
+    model = get_model()
+
+    start = time.perf_counter()
+    embeddings = encode(papers, model)
+    print('Elapsed time (minutes): ', round((time.perf_counter() - start) / 60, 1))
+
+    np.save(filename + '_ids', ids)
+    np.save(filename + '_emb', embeddings)
