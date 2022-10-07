@@ -11,6 +11,13 @@
         <option value=100>Top 100</option>
     </select>
 
+    <select name="category" id="category">
+        <option value="">Whole arXiv</option>
+        {% for category in categories %}
+            <option value={{ category }}>{{ category }}</option>
+        {% endfor %}
+    </select>
+
     <input type="submit" value="Submit">
 </form>
 {% endblock %}
