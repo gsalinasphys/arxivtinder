@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, render_template, request
+
 from utils.semantic_search import (find_row_numbers, get_df, get_embeddings,
                                    top_hits)
 
@@ -13,7 +14,7 @@ def index():
 
 @app.route("/top", methods=["POST"])
 def top():
-    path_to_dataset = "/home/gsalinas/GitHub/arxivtinder/static/arxiv-clean.json"
+    path_to_dataset = "../static/arxiv-clean.json"
     arxiv_df = get_df(path_to_dataset)
 
     filename, _ = os.path.splitext(path_to_dataset)
