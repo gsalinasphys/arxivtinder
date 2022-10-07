@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 
 from utils.semantic_search import (find_row_numbers, get_df, get_embeddings,
                                    top_hits)
