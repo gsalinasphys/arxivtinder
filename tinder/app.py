@@ -1,11 +1,10 @@
 import os
 
 from flask import Flask, render_template, request
-from utils.semantic_search import (find_row_numbers, get_embeddings, get_ids,
+from utils.semantic_search import (find_row_numbers, get_df, get_embeddings,
                                    top_hits)
 
 app = Flask(__name__)
-
 
 @app.route("/")
 def index():
@@ -15,9 +14,10 @@ def index():
 @app.route("/top", methods=["POST"])
 def top():
     path_to_dataset = "/home/gsalinas/GitHub/arxivtinder/static/arxiv-clean.json"
+    arxiv_df = get_df(path_to_dataset)
 
     filename, _ = os.path.splitext(path_to_dataset)
-    corpus_ids = get_ids(filename)
+    corpus_ids = arxiv_df["id"].values
     embeddings = get_embeddings(filename)
 
     query_ids = request.form.get("id").split()
@@ -29,8 +29,10 @@ def top():
 
     hits_formatted = [
         [
-            [round(paper["score"], 3), corpus_ids[paper["corpus_id"]]]
-            for paper in tophits
+            [round(paper_index["score"], 3), corpus_ids[paper_index["corpus_id"]],
+            arxiv_df["title"].values[paper_index["corpus_id"]],
+            arxiv_df["abstract"].values[paper_index["corpus_id"]]]
+            for paper_index in tophits
         ]
         for tophits in all_tophits
     ]

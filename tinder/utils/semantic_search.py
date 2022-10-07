@@ -3,13 +3,14 @@ import os
 from functools import cache
 
 import numpy as np
+import pandas as pd
 import torch
 from sentence_transformers import util
 
 
 @cache
-def get_ids(filename: str) -> np.ndarray:
-    return np.load(filename + "_ids.npy", allow_pickle=True)
+def get_df(filename: str) -> np.ndarray:
+    return pd.read_json(filename, lines=True)
 
 
 @cache
@@ -41,7 +42,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     filename, _ = os.path.splitext(args.path_to_database)
-    ids = get_ids(filename)
+    arxiv_df = get_df(args.path_to_database)
+    ids = arxiv_df["id"].values
     embeddings = get_embeddings(filename)
 
     stay = True
