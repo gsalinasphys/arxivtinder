@@ -26,7 +26,7 @@ def top():
         return render_template("failure.html")
 
     rows = find_row_numbers(query_ids, corpus_ids)
-    all_tophits = top_hits(embeddings, rows)
+    all_tophits = top_hits(embeddings, rows, int(request.form.get("n_recommendations")))
 
     hits_formatted = [
         [
