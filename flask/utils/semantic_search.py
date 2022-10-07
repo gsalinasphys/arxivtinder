@@ -11,6 +11,7 @@ from sentence_transformers import util
 def get_ids(filename: str) -> np.ndarray:
     return np.load(filename + "_ids.npy", allow_pickle=True)
 
+
 @cache
 def get_embeddings(filename: str) -> np.ndarray:
     return np.load(filename + "_emb.npy")

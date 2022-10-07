@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<form action="/top10"  method="post">
+    <input type="text" name="id" placeholder="Type arXiv ID">
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}
