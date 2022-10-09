@@ -28,7 +28,7 @@ def top():
 
     rows = find_row_numbers([query_id], corpus_ids)
     all_tophits = top_hits(
-        embeddings, rows, int(request.args.get("n_recommendations")) + 1
+        embeddings, rows, int(request.args.get("n_recommendations", 10)) + 1
     )[0]
 
     hits_formatted = [
