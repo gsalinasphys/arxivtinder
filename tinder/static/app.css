@@ -1,0 +1,50 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.title {
+color: #444444;
+}
+
+.table-header {
+    background: #ccc;
+}
+
+.results-block {
+    margin: 12px;
+    min-width: 400px;
+}
+
+tr:nth-child(even) {
+    background: #eee;
+}
+
+th {
+    padding: 4px;
+}
+
+td {
+    padding: 8px;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.search-form {
+    margin: 12px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
+    background: #b31b1b;
+    color: white;
+}
+
+.error {
+    color: red;
+}
