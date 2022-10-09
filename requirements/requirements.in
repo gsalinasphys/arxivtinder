@@ -4,3 +4,4 @@ SQLAlchemy
 alembic
 tqdm
 sentence-transformers
+flask
