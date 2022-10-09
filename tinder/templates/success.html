@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends "index.html" %}
 
-{% block body %}
+{% block results %}
     {% for ii in range(n_queries) %}
         <h1>Results for {{ query_ids[ii] }}</h1>
         <table>
