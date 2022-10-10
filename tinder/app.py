@@ -1,7 +1,9 @@
 import os
 
 from flask import Flask, render_template, request
-from utils.semantic_search import find_row_numbers, get_df, get_embeddings, top_hits
+
+from utils.semantic_search import (find_row_numbers, get_df, get_embeddings,
+                                   top_hits)
 
 app = Flask(__name__)
 
