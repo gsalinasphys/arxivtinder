@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
-{% block body %}
-<form action="/top"  method="post">
+{% block search_area %}
+<form action="top" class="search-form">
     <input type="text" name="id" placeholder="Type arXiv ID">
 
     <select name="n_recommendations" id="n_recommendations">
@@ -11,13 +11,9 @@
         <option value=100>Top 100</option>
     </select>
 
-    <select name="category" id="category">
-        <option value="">Whole arXiv</option>
-        {% for category in categories %}
-            <option value={{ category }}>{{ category }}</option>
-        {% endfor %}
-    </select>
-
     <input type="submit" value="Submit">
 </form>
+<div class="results-block">
+{% block results %}{% endblock %}
+</div>
 {% endblock %}

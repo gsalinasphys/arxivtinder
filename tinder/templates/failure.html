@@ -1,5 +1,5 @@
-{% extends "layout.html" %}
+{% extends "index.html" %}
 
-{% block body %}
-<p>Failed.</p>
+{% block results %}
+<p class="error">Failed: {{ failure_message }}</p>
 {% endblock %}

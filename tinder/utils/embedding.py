@@ -19,6 +19,7 @@ def get_id_title_abs(filepath: str) -> list:
         for line in f.readlines():
             paper = json.loads(line)
             papers.append(paper["title"] + "[SEP]" + paper["abstract"].strip())
+            ids.append(paper["id"])
 
     return ids, papers
 
