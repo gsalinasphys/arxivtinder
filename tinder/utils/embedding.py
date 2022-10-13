@@ -10,16 +10,19 @@ from sentence_transformers import SentenceTransformer
 
 @cache
 def get_model():
-    return SentenceTransformer('allenai-specter')
+    return SentenceTransformer("allenai-specter")
+
 
 def get_id_title_abs(filepath: str) -> list:
     ids, papers = [], []
-    with open(filepath, 'r') as f:
+    with open(filepath, "r") as f:
         for line in f.readlines():
             paper = json.loads(line)
-            papers.append(paper['title'] + '[SEP]' + paper['abstract'].strip())
-    
+            papers.append(paper["title"] + "[SEP]" + paper["abstract"].strip())
+            ids.append(paper["id"])
+
     return ids, papers
+
 
 def encode(sentences: np.ndarray, model) -> np.ndarray:
     """Generates the embeddings of sentences using a
@@ -27,6 +30,7 @@ def encode(sentences: np.ndarray, model) -> np.ndarray:
     embeddings = model.encode(sentences)
 
     return embeddings
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -41,7 +45,7 @@ if __name__ == "__main__":
 
     start = time.perf_counter()
     embeddings = encode(papers, model)
-    print('Elapsed time (minutes): ', round((time.perf_counter() - start) / 60, 1))
+    print("Elapsed time (minutes): ", round((time.perf_counter() - start) / 60, 1))
 
-    np.save(filename + '_ids', ids)
-    np.save(filename + '_emb', embeddings)
+    np.save(filename + "_ids", ids)
+    np.save(filename + "_emb", embeddings)

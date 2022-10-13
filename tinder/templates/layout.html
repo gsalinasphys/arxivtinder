@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale=1, width=device-width"/>
+        <title>arXiv Tinder</title>
+        <link rel="stylesheet"  type="text/css" href="{{url_for('static', filename='app.css')}}">
+    </head>
+    <body>
+        <nav>
+            <h1>
+                arXiv Tinder
+            </h1>
+            <img src="{{url_for('static', filename='logo2.png')}}" width="37" height="37">
+        </nav>
+        {% block search_area %}{% endblock %}
+    </body>
+</html>
