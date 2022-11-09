@@ -40,7 +40,8 @@ def get_articles(arxiv_json_path: str = "../local_files/arxiv-metadata-oai-snaps
 
     return articles
 
-def populate_db(arxiv_json_path: str = "../local_files/arxiv-metadata-oai-snapshot.json"):
+def populate_db(arxiv_json_path: str = "../local_files/arxiv-metadata-oai-snapshot.json",
+                DATABASE_URI: str = DATABASE_URI):
     articles = get_articles(arxiv_json_path)
 
     DATABASE_URI = DATABASE_URI.split("///")[0] + "///../" + DATABASE_URI.split("///")[1]
@@ -51,6 +52,16 @@ def populate_db(arxiv_json_path: str = "../local_files/arxiv-metadata-oai-snapsh
         session.commit()
 
     print(f"{len(articles)} added to the DB.")
+
+def wipe_db(DATABASE_URI: str = DATABASE_URI):
+    DATABASE_URI = DATABASE_URI.split("///")[0] + "///../" + DATABASE_URI.split("///")[1]
+    session_maker = sessionmaker(bind=create_engine(DATABASE_URI))
+
+    with session_maker() as session:
+        n_deleted = session.query(Article).delete()
+        session.commit()
+
+    print(f"{n_deleted} papers removed from DB.")
 
 if __name__ == '__main__':
     populate_db()
