@@ -9,7 +9,7 @@ from sentence_transformers import util
 
 
 @cache
-def get_df(filename: str) -> np.ndarray:
+def get_df(filename: str):
     return pd.read_json(filename, lines=True)
 
 

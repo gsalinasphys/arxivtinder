@@ -16,7 +16,6 @@ class Article(Base):
     title = Column(String, nullable=False)
     abstract = Column(String, nullable=False)
     authors = Column(String)
-    categories = Column(String)
     updated_at = Column(Date, nullable=False)
     journal_ref = Column(String)
     doi = Column(String)
